@@ -1,32 +1,5 @@
 import { NextResponse } from 'next/server';
-import db from '../../../server/models/index.js';
-
-// GET /api/products - Obtener todos los productos
-export async function GET() {
-  try {
-    const products = await db.Product.findAll({
-      include: [
-        { model: db.Category, as: 'category' },
-        { model: db.Store, as: 'store', include: [{ model: db.Seller, as: 'seller' }] }
-      ]
-    });
-    return NextResponse.json(products);
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
-
-// POST /api/products - Crear nuevo producto
-export async function POST(request) {
-  try {
-    const productData = await request.json();
-    const product = await db.Product.create(productData);
-    return NextResponse.json(product, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
-}
-
+import db from '@/server/models/index.js';
 // PUT /api/products/:id - Actualizar producto
 export async function PUT(request, { params }) {
   try {
