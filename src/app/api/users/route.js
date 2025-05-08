@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import db from '@/server/models/index.js';
+import  db  from '@/server/models/index';
 
 // GET /api/users - Obtener todos los usuarios
 export async function GET() {

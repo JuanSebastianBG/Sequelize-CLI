@@ -1,30 +1,41 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../sequelize';
+'use strict';
 
-const Seller = sequelize.define('Seller', {
-  seller_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  seller_balance: {
-    type: DataTypes.DECIMAL(10, 2),
-    defaultValue: 0.00
-  }
-}, {
-  tableName: 'sellers',
-  timestamps: true
-});
+const { DataTypes } = require('sequelize');
 
-Seller.associate = (models) => {
-  Seller.belongsTo(models.User, {
-    foreignKey: 'user_id',
-    as: 'user'
+module.exports = (sequelize, DataTypes) => {
+  const Seller = sequelize.define('Seller', {
+    seller_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    seller_balance: {
+      type: DataTypes.DECIMAL(10, 2),
+      defaultValue: 0.00
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'user_id'
+      }
+    }
+  }, {
+    tableName: 'sellers',
+    timestamps: true
   });
-  Seller.hasMany(models.Store, {
-    foreignKey: 'seller_id',
-    as: 'stores'
-  });
+
+  Seller.associate = function(models) {
+    Seller.belongsTo(models.User, {
+      foreignKey: 'user_id',
+      as: 'user'
+    });
+    Seller.hasMany(models.Store, {
+      foreignKey: 'seller_id',
+      as: 'stores'
+    });
+  };
+
+  return Seller;
 };
-
-export default Seller;

@@ -1,26 +1,30 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../sequelize';
+'use strict';
 
-const ShippingHistory = sequelize.define('ShippingHistory', {
-  assignment_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  shipping_status: {
-    type: DataTypes.ENUM('pendiente', 'alistado', 'recogido', 'en camino', 'entregado'),
-    defaultValue: 'pendiente'
-  }
-}, {
-  tableName: 'shipping_history',
-  timestamps: true
-});
+const { DataTypes } = require('sequelize');
 
-ShippingHistory.associate = (models) => {
-  ShippingHistory.belongsTo(models.Order, {
-    foreignKey: 'order_id',
-    as: 'order'
+module.exports = (sequelize, DataTypes) => {
+  const ShippingHistory = sequelize.define('ShippingHistory', {
+    assignment_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    shipping_status: {
+      type: DataTypes.ENUM('pendiente', 'alistado', 'recogido', 'en camino', 'entregado'),
+      defaultValue: 'pendiente'
+    }
+  }, {
+    tableName: 'shipping_history',
+    timestamps: true,
+    underscored: true
   });
-};
 
-export default ShippingHistory;
+  ShippingHistory.associate = function(models) {
+    ShippingHistory.belongsTo(models.Order, {
+      foreignKey: 'order_id',
+      as: 'order'
+    });
+  };
+
+  return ShippingHistory;
+};
